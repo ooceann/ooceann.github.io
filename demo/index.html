@@ -23,7 +23,7 @@
             <p>预计生存</p>
             <input type="date" id="death" v-model="input2">
         </div>
-        <button class="submit" v-on:click="getInfo()">提交</button>
+        <button class="submit" v-show="btn_show" v-on:click="getInfo()">提交</button>
     </div>
     <div class="time">
         <div class="ed">
@@ -49,14 +49,15 @@
     onload = function () {
         var birthTime = index.getCookieValue("birthTime");
         var deathTime = index.getCookieValue("deathTime");
-        console.log(index.input1);
+        console.log(birthTime);
         if (birthTime === '' || deathTime === '') {
-            return;
+            return{}
         } else {
-            index.input1 = birthTime;
-            index.input2 = deathTime;
-            index.getInfo();
-            // index.calTime(birthTime, deathTime);
+            document.getElementById('birth').value = birthTime;
+            console.log('========='+document.getElementById('birth').value);
+            document.getElementById('death').value = deathTime;
+            index.calTime(birthTime, deathTime);
+            console.log('hhhhhh');
         }
     };
     var index = new Vue({
@@ -101,16 +102,15 @@
 
             getInfo: function () {
                 // 判断是否有数据
-                var birthTime = this.input1;
-                var deathTime = this.input2;
-                if (birthTime === '' || deathTime === '') {
+                if (this.input1 === '' || this.input2 === '') {
                     alert('请填写信息');
                 } else {
                     // 获取输入的出生/死亡时间，并转换为时间戳进行计算
-                    this.setCookie(birthTime, deathTime);
-                    setInterval(this.calTime(birthTime,deathTime), 1000);
-                    // this.calTime(birthTime,deathTime);
+                    var birthTime = this.input1;
+                    var deathTime = this.input2;
+                    this.calTime(birthTime,deathTime);
 
+                    this.setCookie(birthTime, deathTime);
                 }
             },
             calTime:function (birthTime,deathTime) {
@@ -130,11 +130,9 @@
                 this.ing_h = Math.floor((time2) / (60 * 60));
                 this.ing_m = Math.floor((time2) / (60));
                 this.ing_s = Math.floor(time2);
-
+                this.btn_show = '';
                 // 利用定时器刷新页面时间
-                console.log("hhhhhhhhhhh");
-                // setInterval(self.calTime(birthTime,deathTime), 1000);
-
+                console.log("dsdsdsd");
             }
         }
     })
